@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">iov-android-app</string>
+    <string name="lock">待解锁</string>
+    <string name="profile">我的</string>
+</resources>
