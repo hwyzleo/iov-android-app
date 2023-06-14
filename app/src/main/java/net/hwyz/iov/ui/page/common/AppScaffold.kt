@@ -40,9 +40,10 @@ fun AppScaffold() {
             .navigationBarsPadding(),
         bottomBar = {
             when (currentDestination?.route) {
-                RouteName.LOCK1 -> BottomNavBar(navCtrl = navCtrl)
-                RouteName.LOCK2 -> BottomNavBar(navCtrl = navCtrl)
-                RouteName.LOCK3 -> BottomNavBar(navCtrl = navCtrl)
+                RouteName.EXPLORE -> BottomNavBar(navCtrl = navCtrl)
+                RouteName.SERVICE -> BottomNavBar(navCtrl = navCtrl)
+                RouteName.VEHICLE -> BottomNavBar(navCtrl = navCtrl)
+                RouteName.MALL -> BottomNavBar(navCtrl = navCtrl)
                 RouteName.PROFILE -> BottomNavBar(navCtrl = navCtrl)
             }
         },
@@ -55,35 +56,42 @@ fun AppScaffold() {
                 navController = navCtrl,
                 startDestination = RouteName.PROFILE
             ) {
-                composable(route = RouteName.LOCK1) {
+                // 探索
+                composable(route = RouteName.EXPLORE) {
                     EmptyView(
                         tips = "待解锁",
                         imageVector = Icons.Default.Lock
                     ) {
                     }
                 }
-
-                composable(route = RouteName.LOCK2) {
+                // 服务
+                composable(route = RouteName.SERVICE) {
                     EmptyView(
                         tips = "待解锁",
                         imageVector = Icons.Default.Lock
                     ) {
                     }
                 }
-
-                composable(route = RouteName.LOCK3) {
+                // 爱车
+                composable(route = RouteName.VEHICLE) {
                     EmptyView(
                         tips = "待解锁",
                         imageVector = Icons.Default.Lock
                     ) {
                     }
                 }
-
+                // 商城
+                composable(route = RouteName.MALL) {
+                    EmptyView(
+                        tips = "待解锁",
+                        imageVector = Icons.Default.Lock
+                    ) {
+                    }
+                }
                 // 我的
                 composable(route = RouteName.PROFILE) {
                     ProfilePage(navCtrl, scaffoldState)
                 }
-
                 // 登录
                 composable(route = RouteName.LOGIN) {
                     LoginPage(navCtrl, scaffoldState)

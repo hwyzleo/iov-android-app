@@ -1,6 +1,6 @@
 package net.hwyz.iov.ui.page.login
 
-import net.hwyz.iov.base.presentation.MviActionProcessor
+import net.hwyz.iov.base.MviActionProcessor
 import net.hwyz.iov.data.http.HttpService
 import net.hwyz.iov.utils.AppUserUtil
 import javax.inject.Inject

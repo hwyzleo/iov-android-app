@@ -2,7 +2,8 @@ package net.hwyz.iov.ui.page.common
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.ui.graphics.vector.ImageVector
 import net.hwyz.iov.R
 
@@ -11,8 +12,9 @@ sealed class BottomNavRoute(
     @StringRes var stringId: Int,
     var icon: ImageVector
 ) {
-    object Lock1 : BottomNavRoute(RouteName.LOCK1, R.string.lock, Icons.Default.Lock)
-    object Lock2 : BottomNavRoute(RouteName.LOCK2, R.string.lock, Icons.Default.Lock)
-    object Lock3 : BottomNavRoute(RouteName.LOCK3, R.string.lock, Icons.Default.Lock)
+    object Explore : BottomNavRoute(RouteName.EXPLORE, R.string.explore, Icons.Default.Lock)
+    object Service : BottomNavRoute(RouteName.SERVICE, R.string.service, Icons.Default.Lock)
+    object Vehicle : BottomNavRoute(RouteName.VEHICLE, R.string.vehicle, Icons.Default.Lock)
+    object Mall : BottomNavRoute(RouteName.MALL, R.string.mall, Icons.Default.Lock)
     object Profile : BottomNavRoute(RouteName.PROFILE, R.string.profile, Icons.Default.Person)
 }

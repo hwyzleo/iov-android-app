@@ -22,9 +22,10 @@ import timber.log.Timber
 @Composable
 fun BottomNavBar(navCtrl: NavHostController) {
     val bottomNavList = listOf(
-        BottomNavRoute.Lock1,
-        BottomNavRoute.Lock2,
-        BottomNavRoute.Lock3,
+        BottomNavRoute.Explore,
+        BottomNavRoute.Service,
+        BottomNavRoute.Vehicle,
+        BottomNavRoute.Mall,
         BottomNavRoute.Profile
     )
     BottomNavigation {
