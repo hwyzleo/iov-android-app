@@ -1,5 +1,6 @@
 package net.hwyz.iov.ui.page.common
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
@@ -26,7 +27,7 @@ fun BottomNavBar(navCtrl: NavHostController) {
         BottomNavRoute.Service,
         BottomNavRoute.Vehicle,
         BottomNavRoute.Mall,
-        BottomNavRoute.Profile
+        BottomNavRoute.My
     )
     BottomNavigation {
         val navBackStackEntry by navCtrl.currentBackStackEntryAsState()
@@ -49,8 +50,8 @@ fun BottomNavBar(navCtrl: NavHostController) {
                 },
                 selected = currentDestination?.hierarchy?.any { it.route == screen.routeName } == true,
                 onClick = {
-                    Timber.d("BottomNavView当前路由 ===> ${currentDestination?.hierarchy?.toList()}")
-                    Timber.d("当前路由栈 ===> ${navCtrl.graph.nodes}")
+                    Log.d("test","BottomNavView当前路由 ===> ${currentDestination?.hierarchy?.toList()}")
+                    Log.d("test","当前路由栈 ===> ${navCtrl.graph.nodes}")
                     if (currentDestination?.route != screen.routeName) {
                         navCtrl.navigate(screen.routeName) {
                             popUpTo(navCtrl.graph.findStartDestination().id) {

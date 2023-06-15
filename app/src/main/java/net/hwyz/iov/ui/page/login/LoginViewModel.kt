@@ -37,10 +37,15 @@ class LoginViewModel @Inject constructor(
             is LoginIntent.UpdateMobileIntent -> LoginAction.UpdateMobileAction(intent.mobile)
             is LoginIntent.ClearMobileIntent -> LoginAction.ClearMobileAction
             is LoginIntent.UpdateAgreeIntent -> TODO()
-            is LoginIntent.SendVerifyCodeIntent -> LoginAction.SendVerifyCodeAction(viewStates.mobile)
+            is LoginIntent.SendVerifyCodeIntent -> LoginAction.SendVerifyCodeAction(
+                viewStates.countryRegionCode,
+                viewStates.mobile
+            )
+
             is LoginIntent.UpdateVerifyCodeIntent -> LoginAction.UpdateVerifyCodeAction(intent.verifyCode)
             is LoginIntent.ClearVerifyCodeIntent -> LoginAction.ClearVerifyCodeAction
             is LoginIntent.VerifyCodeLoginIntent -> LoginAction.VerifyCodeLoginAction(
+                viewStates.countryRegionCode,
                 viewStates.mobile,
                 viewStates.verifyCode
             )

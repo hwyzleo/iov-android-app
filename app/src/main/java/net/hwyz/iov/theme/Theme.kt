@@ -38,7 +38,7 @@ private val DarkColorPalette = AppColors(
 
 // 白天主题
 private val LightColorPalette = AppColors(
-    themeUi = themeColor,
+    themeUi = white,
     background = white2,
     listItem = white,
     divider = white3,
@@ -51,7 +51,7 @@ private val LightColorPalette = AppColors(
     warn = warn,
     success = green3,
     error = red2,
-    primaryBtnBg = themeColor,
+    primaryBtnBg = white,
     secondBtnBg = white3,
     hot = red,
     placeholder = white3,
@@ -136,8 +136,8 @@ fun AppTheme(
 
     val targetColors = when (theme) {
         AppTheme.Theme.Light -> {
-            LightColorPalette.themeUi = themeColor
-            LightColorPalette.primaryBtnBg = themeColor
+            LightColorPalette.themeUi = white
+            LightColorPalette.primaryBtnBg = white
             LightColorPalette
         }
 

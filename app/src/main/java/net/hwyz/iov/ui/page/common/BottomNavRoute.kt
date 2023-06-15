@@ -16,5 +16,5 @@ sealed class BottomNavRoute(
     object Service : BottomNavRoute(RouteName.SERVICE, R.string.service, Icons.Default.Lock)
     object Vehicle : BottomNavRoute(RouteName.VEHICLE, R.string.vehicle, Icons.Default.Lock)
     object Mall : BottomNavRoute(RouteName.MALL, R.string.mall, Icons.Default.Lock)
-    object Profile : BottomNavRoute(RouteName.PROFILE, R.string.profile, Icons.Default.Person)
+    object My : BottomNavRoute(RouteName.MY, R.string.my, Icons.Default.Person)
 }

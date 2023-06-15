@@ -6,8 +6,8 @@ sealed class LoginAction : MviAction {
     object InitAction : LoginAction()
     data class UpdateMobileAction(val mobile: String) : LoginAction()
     object ClearMobileAction : LoginAction()
-    data class SendVerifyCodeAction(val mobile: String) : LoginAction()
+    data class SendVerifyCodeAction(val countryRegionCode: String, val mobile: String) : LoginAction()
     data class UpdateVerifyCodeAction(val verifyCode: String) : LoginAction()
     object ClearVerifyCodeAction : LoginAction()
-    data class VerifyCodeLoginAction(val mobile: String, val verifyCode: String) : LoginAction()
+    data class VerifyCodeLoginAction(val countryRegionCode: String, val mobile: String, val verifyCode: String) : LoginAction()
 }

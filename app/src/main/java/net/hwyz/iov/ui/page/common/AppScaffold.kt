@@ -19,7 +19,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
 import net.hwyz.iov.ui.page.login.LoginPage
-import net.hwyz.iov.ui.page.main.profile.ProfilePage
+import net.hwyz.iov.ui.page.my.MyPage
 import net.hwyz.iov.ui.widgets.EmptyView
 import net.hwyz.iov.ui.widgets.bar.AppSnackBar
 
@@ -44,7 +44,7 @@ fun AppScaffold() {
                 RouteName.SERVICE -> BottomNavBar(navCtrl = navCtrl)
                 RouteName.VEHICLE -> BottomNavBar(navCtrl = navCtrl)
                 RouteName.MALL -> BottomNavBar(navCtrl = navCtrl)
-                RouteName.PROFILE -> BottomNavBar(navCtrl = navCtrl)
+                RouteName.MY -> BottomNavBar(navCtrl = navCtrl)
             }
         },
         content = {
@@ -54,7 +54,7 @@ fun AppScaffold() {
             NavHost(
                 modifier = Modifier.background(MaterialTheme.colors.background),
                 navController = navCtrl,
-                startDestination = RouteName.PROFILE
+                startDestination = RouteName.MY
             ) {
                 // 探索
                 composable(route = RouteName.EXPLORE) {
@@ -89,8 +89,8 @@ fun AppScaffold() {
                     }
                 }
                 // 我的
-                composable(route = RouteName.PROFILE) {
-                    ProfilePage(navCtrl, scaffoldState)
+                composable(route = RouteName.MY) {
+                    MyPage(navCtrl, scaffoldState)
                 }
                 // 登录
                 composable(route = RouteName.LOGIN) {

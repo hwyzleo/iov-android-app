@@ -4,5 +4,5 @@
     <string name="service">服务</string>
     <string name="vehicle">爱车</string>
     <string name="mall">商城</string>
-    <string name="profile">我的</string>
+    <string name="my">我的</string>
 </resources>

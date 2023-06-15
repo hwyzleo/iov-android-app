@@ -15,19 +15,24 @@ open class LoginProcessor @Inject constructor(
             is LoginAction.InitAction -> TODO()
             is LoginAction.UpdateMobileAction -> LoginResult.UpdateMobileResult(action.mobile)
             is LoginAction.ClearMobileAction -> LoginResult.ClearMobileResult
-            is LoginAction.SendVerifyCodeAction -> sendVerifyCode(action.mobile)
+            is LoginAction.SendVerifyCodeAction -> sendVerifyCode(
+                action.countryRegionCode,
+                action.mobile
+            )
+
             is LoginAction.UpdateVerifyCodeAction -> LoginResult.UpdateVerifyCodeResult(action.verifyCode)
             is LoginAction.ClearVerifyCodeAction -> LoginResult.ClearVerifyCodeResult
             is LoginAction.VerifyCodeLoginAction -> verifyCodeLogin(
+                action.countryRegionCode,
                 action.mobile,
                 action.verifyCode
             )
         }
     }
 
-    private suspend fun sendVerifyCode(mobile: String): LoginResult {
+    private suspend fun sendVerifyCode(countryRegionCode: String, mobile: String): LoginResult {
         return try {
-            val response = service.sendLoginVerifyCode(mobile.trim())
+            val response = service.sendLoginVerifyCode(countryRegionCode.trim(), mobile.trim())
             if (response.code == 0) {
                 LoginResult.SendVerifyCodeResult.Success
             } else {
@@ -39,11 +44,13 @@ open class LoginProcessor @Inject constructor(
     }
 
     private suspend fun verifyCodeLogin(
+        countryRegionCode: String,
         mobile: String,
         verifyCode: String
     ): LoginResult {
         return try {
-            val response = service.verifyCodeLogin(mobile.trim(), verifyCode.trim())
+            val response =
+                service.verifyCodeLogin(countryRegionCode.trim(), mobile.trim(), verifyCode.trim())
             if (response.code == 0) {
                 AppUserUtil.onLogin(response.data!!)
                 LoginResult.VerifyCodeLoginResult.Success

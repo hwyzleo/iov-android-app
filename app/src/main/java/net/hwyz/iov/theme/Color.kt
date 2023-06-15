@@ -6,7 +6,6 @@ import net.hwyz.iov.R
 
 val Transparent = Color(0x00000000)
 
-val themeColor = Color(IovApp.CONTEXT.resources.getColor(R.color.primary))
 val splashText = Color(0x25000000)
 val white = Color(0xFFFFFFFF)
 val white1 = Color(0xFFF7F7F7)
