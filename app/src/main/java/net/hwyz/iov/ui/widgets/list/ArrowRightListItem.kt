@@ -38,7 +38,6 @@ fun ArrowRightListItem(
                 onClick.invoke()
             }
     ) {
-
         when (iconRes) {
             is Painter -> {
                 Icon(
