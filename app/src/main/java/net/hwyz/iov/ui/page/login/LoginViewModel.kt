@@ -34,11 +34,12 @@ class LoginViewModel @Inject constructor(
     override fun actionFromIntent(intent: LoginIntent): LoginAction {
         return when (intent) {
             is LoginIntent.InitIntent -> TODO()
+            is LoginIntent.SelectCountryRegionIntent -> LoginAction.SelectCountryRegionAction(intent.countryRegionCode)
             is LoginIntent.UpdateMobileIntent -> LoginAction.UpdateMobileAction(intent.mobile)
             is LoginIntent.ClearMobileIntent -> LoginAction.ClearMobileAction
             is LoginIntent.UpdateAgreeIntent -> TODO()
             is LoginIntent.SendVerifyCodeIntent -> LoginAction.SendVerifyCodeAction(
-                viewStates.countryRegionCode,
+                intent.countryRegionCode,
                 viewStates.mobile
             )
 
@@ -49,15 +50,18 @@ class LoginViewModel @Inject constructor(
                 viewStates.mobile,
                 viewStates.verifyCode
             )
+
+
         }
     }
 
     override suspend fun reducer(result: LoginResult) {
         when (result) {
             is LoginResult.InitResult -> TODO()
+            is LoginResult.SelectCountryRegionResult -> updateCountryRegion(result.countryRegionCode)
             is LoginResult.UpdateMobileResult -> updateMobile(result.mobile)
             is LoginResult.ClearMobileResult -> clearMobile()
-            is LoginResult.SendVerifyCodeResult.Success -> sendVerifyCodeSuccess()
+            is LoginResult.SendVerifyCodeResult.Success -> sendVerifyCodeSuccess(result.countryRegionCode, result.mobile)
             is LoginResult.SendVerifyCodeResult.Failure -> sendVerifyCodeFailure(
                 result.error.message ?: ""
             )
@@ -69,6 +73,10 @@ class LoginViewModel @Inject constructor(
                 result.error.message ?: ""
             )
         }
+    }
+
+    private fun updateCountryRegion(countryRegionCode: String) {
+        viewStates = viewStates.copy(countryRegionCode = countryRegionCode)
     }
 
     private fun updateMobile(mobile: String) {
@@ -83,8 +91,12 @@ class LoginViewModel @Inject constructor(
         viewStates = viewStates.copy(isAgree = isAgree)
     }
 
-    private fun sendVerifyCodeSuccess() {
-        viewStates = viewStates.copy(isSendVerifyCode = true)
+    private fun sendVerifyCodeSuccess(countryRegionCode: String, mobile: String) {
+        viewStates = viewStates.copy(
+            isSendVerifyCode = true,
+            countryRegionCode = countryRegionCode,
+            mobile = mobile
+        )
     }
 
     private suspend fun sendVerifyCodeFailure(error: String) {

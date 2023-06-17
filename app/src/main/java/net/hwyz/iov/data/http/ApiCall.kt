@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import net.hwyz.iov.data.http.interceptor.CacheCookieInterceptor
 import net.hwyz.iov.data.http.interceptor.LogInterceptor
 import net.hwyz.iov.data.http.interceptor.SetCookieInterceptor
+import net.hwyz.iov.data.http.interceptor.SetHeaderInterceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -42,6 +43,7 @@ object ApiCall {
                 readTimeout(DEFAULT_TIMEOUT.toLong(), TimeUnit.MILLISECONDS)
                 writeTimeout(DEFAULT_TIMEOUT.toLong(), TimeUnit.MILLISECONDS)
                 addInterceptor(SetCookieInterceptor())
+                addInterceptor(SetHeaderInterceptor())
                 addInterceptor(CacheCookieInterceptor())
                 addInterceptor(LogInterceptor())
                 //不验证证书

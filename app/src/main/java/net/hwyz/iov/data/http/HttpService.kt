@@ -12,12 +12,12 @@ import retrofit2.http.*
 interface HttpService {
 
     companion object {
-        const val url = "http://10.0.68.143:8081"
+        const val url = "http://192.168.2.223:8081"
     }
 
     // 发送登录验证码
     @FormUrlEncoded
-    @POST("/login/sendVerifyCode")
+    @POST("/mp/login/sendVerifyCode")
     suspend fun sendLoginVerifyCode(
         @Field("countryRegionCode") countryRegionCode: String,
         @Field("mobile") mobile: String
@@ -25,7 +25,7 @@ interface HttpService {
 
     // 验证码登录
     @FormUrlEncoded
-    @POST("/login/verifyCodeLogin")
+    @POST("/mp/login/verifyCodeLogin")
     suspend fun verifyCodeLogin(
         @Field("countryRegionCode") countryRegionCode: String,
         @Field("mobile") mobile: String,

@@ -55,32 +55,15 @@ fun MyScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         if (!isLogin.value) {
-            Button(
-                onClick = {
-                    RouteUtils.navTo(
-                        navCtrl = navCtrl,
-                        destinationName = RouteName.LOGIN
-                    )
-                },
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color.Transparent
-                ),
-                elevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp)
-            ) {
-                Column() {
-                    Icon(
-                        imageVector = Icons.Default.AccountCircle,
-                        contentDescription = "",
-                        modifier = Modifier
-                            .padding(top = 80.dp)
-                            .size(100.dp)
-                    )
-                    Text(text = "注册/登录", fontSize = 18.sp, modifier = Modifier.padding(5.dp))
-                    Spacer(modifier = Modifier.padding(bottom = 10.dp))
-                }
+            MyAvatar(nickname = "注册 / 登录") {
+                RouteUtils.navTo(
+                    navCtrl = navCtrl,
+                    destinationName = RouteName.LOGIN
+                )
             }
+        } else {
+            MyAvatar(nickname = AppUserUtil.userInfo?.nickname ?: "") {}
         }
-
         Column {
             ArrowRightListItem(iconRes = Icons.Default.List, title = "我的积分") {}
             ArrowRightListItem(iconRes = Icons.Default.ShoppingCart, title = "我的订单") {}
@@ -94,6 +77,32 @@ fun MyScreen(
                     isLogin.value = false
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun MyAvatar(
+    nickname: String,
+    onClick: () -> Unit
+) {
+    Button(
+        onClick = onClick,
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = Color.Transparent
+        ),
+        elevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp)
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Icon(
+                imageVector = Icons.Default.AccountCircle,
+                contentDescription = "",
+                modifier = Modifier
+                    .padding(top = 80.dp)
+                    .size(100.dp)
+            )
+            Text(text = nickname, fontSize = 18.sp, modifier = Modifier.padding(5.dp))
+            Spacer(modifier = Modifier.padding(bottom = 10.dp))
         }
     }
 }

@@ -128,7 +128,7 @@ fun LoginScreen(
                             DropdownMenuItem(onClick = {
                                 expanded.value = false
                                 selectedIndex.value = index
-                                viewStates.countryRegionCode = countryRegionCode[index]
+                                dispatch(LoginIntent.SelectCountryRegionIntent(countryRegionCode[index]))
                             }) {
                                 Text(text = s)
                             }
@@ -154,7 +154,7 @@ fun LoginScreen(
                     modifier = Modifier.padding(horizontal = 20.dp)
                 ) {
                     keyboardController?.hide()
-                    dispatch(LoginIntent.SendVerifyCodeIntent)
+                    dispatch(LoginIntent.SendVerifyCodeIntent(countryRegionCode[selectedIndex.value]))
                 }
             }
         } else {

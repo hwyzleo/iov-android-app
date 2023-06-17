@@ -2,6 +2,7 @@ package net.hwyz.iov.data.bean
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import java.util.Date
 
 /**
  * TSP平台通用响应实体
@@ -18,6 +19,10 @@ data class TspResponse<T>(
  */
 @Parcelize
 data class UserInfo(
+    var mobile: String,
+    var nickname: String,
     var token: String,
-    var username: String,
+    var tokenExpires: Long,
+    var refreshToken: String,
+    var refreshTokenExpires: Long
 ) : Parcelable

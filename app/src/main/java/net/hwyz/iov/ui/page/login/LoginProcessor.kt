@@ -13,6 +13,7 @@ open class LoginProcessor @Inject constructor(
     override suspend fun executeAction(action: LoginAction): LoginResult {
         return when (action) {
             is LoginAction.InitAction -> TODO()
+            is LoginAction.SelectCountryRegionAction -> LoginResult.SelectCountryRegionResult(action.countryRegionCode)
             is LoginAction.UpdateMobileAction -> LoginResult.UpdateMobileResult(action.mobile)
             is LoginAction.ClearMobileAction -> LoginResult.ClearMobileResult
             is LoginAction.SendVerifyCodeAction -> sendVerifyCode(
@@ -27,6 +28,8 @@ open class LoginProcessor @Inject constructor(
                 action.mobile,
                 action.verifyCode
             )
+
+
         }
     }
 
@@ -34,7 +37,7 @@ open class LoginProcessor @Inject constructor(
         return try {
             val response = service.sendLoginVerifyCode(countryRegionCode.trim(), mobile.trim())
             if (response.code == 0) {
-                LoginResult.SendVerifyCodeResult.Success
+                LoginResult.SendVerifyCodeResult.Success(countryRegionCode, mobile)
             } else {
                 throw Exception(response.message)
             }
