@@ -22,7 +22,7 @@ import net.hwyz.iov.theme.H7
 import net.hwyz.iov.ui.widgets.TextContent
 
 @Composable
-fun ArrowRightListItem(
+fun TitleList(
     iconRes: Any,
     title: String,
     msgCount: Int? = null,

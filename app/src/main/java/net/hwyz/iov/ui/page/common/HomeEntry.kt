@@ -6,9 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.lifecycle.LiveData
 import net.hwyz.iov.theme.AppTheme
-import net.hwyz.iov.ui.page.login.LoginState
 import net.hwyz.iov.ui.page.splash.SplashPage
 
 @ExperimentalComposeUiApi

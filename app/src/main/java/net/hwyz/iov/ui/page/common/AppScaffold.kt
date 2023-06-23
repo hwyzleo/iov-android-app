@@ -20,6 +20,7 @@ import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
 import net.hwyz.iov.ui.page.login.LoginPage
 import net.hwyz.iov.ui.page.my.MyPage
+import net.hwyz.iov.ui.page.my.profile.ProfilePage
 import net.hwyz.iov.ui.widgets.EmptyView
 import net.hwyz.iov.ui.widgets.bar.AppSnackBar
 
@@ -91,6 +92,10 @@ fun AppScaffold() {
                 // 我的
                 composable(route = RouteName.MY) {
                     MyPage(navCtrl, scaffoldState)
+                }
+                // 用户资料
+                composable(route = RouteName.PROFILE) {
+                    ProfilePage(navCtrl, scaffoldState)
                 }
                 // 登录
                 composable(route = RouteName.LOGIN) {

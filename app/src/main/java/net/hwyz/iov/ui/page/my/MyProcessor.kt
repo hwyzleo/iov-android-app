@@ -11,7 +11,7 @@ open class MyProcessor @Inject constructor(
 
     override suspend fun executeAction(action: MyAction): MyResult {
         return when (action) {
-            is MyAction.LoginAction -> MyResult.LoginResult
+            MyAction.CheckLocalUser -> MyResult.DefaultResult
         }
     }
 }

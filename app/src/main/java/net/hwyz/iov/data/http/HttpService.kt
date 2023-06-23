@@ -1,7 +1,8 @@
 package net.hwyz.iov.data.http
 
+import net.hwyz.iov.data.bean.AccountInfo
+import net.hwyz.iov.data.bean.LoginResponse
 import net.hwyz.iov.data.bean.TspResponse
-import net.hwyz.iov.data.bean.UserInfo
 import retrofit2.http.*
 
 /**
@@ -17,7 +18,7 @@ interface HttpService {
 
     // 发送登录验证码
     @FormUrlEncoded
-    @POST("/mp/login/sendVerifyCode")
+    @POST("/account/mp/login/sendVerifyCode")
     suspend fun sendLoginVerifyCode(
         @Field("countryRegionCode") countryRegionCode: String,
         @Field("mobile") mobile: String
@@ -25,11 +26,29 @@ interface HttpService {
 
     // 验证码登录
     @FormUrlEncoded
-    @POST("/mp/login/verifyCodeLogin")
+    @POST("/account/mp/login/verifyCodeLogin")
     suspend fun verifyCodeLogin(
         @Field("countryRegionCode") countryRegionCode: String,
         @Field("mobile") mobile: String,
         @Field("verifyCode") verifyCode: String
-    ): TspResponse<UserInfo>
+    ): TspResponse<LoginResponse>
+
+    // 获取账号信息
+    @GET("/account/mp/account/info")
+    suspend fun getAccountInfo(): TspResponse<AccountInfo>
+
+    // 更新昵称
+    @FormUrlEncoded
+    @POST("/account/mp/account/action/modifyNickname")
+    suspend fun modifyNickname(
+        @Field("nickname") nickname: String
+    ): TspResponse<Void>
+
+    // 更新性别
+    @FormUrlEncoded
+    @POST("/account/mp/account/action/modifyGender")
+    suspend fun modifyGender(
+        @Field("gender") gender: String
+    ): TspResponse<Void>
 
 }

@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import net.hwyz.iov.base.presentation.BaseViewModel
+import net.hwyz.iov.ui.page.my.profile.ProfileAction
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,79 +22,44 @@ class LoginViewModel @Inject constructor(
     private val _viewEvents = Channel<LoginViewEvent>(Channel.BUFFERED)
     val viewEvents = _viewEvents.receiveAsFlow()
 
-    fun dispatch(intent: LoginIntent) {
-        var action = actionFromIntent(intent)
-        viewModelScope.launch {
-            flow {
-                var result = actionProcessor.executeAction(action)
-                emit(reducer(result))
-            }.collect()
-        }
-    }
-
-    override fun actionFromIntent(intent: LoginIntent): LoginAction {
+    override fun actionFromIntent(intent: LoginIntent): List<LoginAction> {
         return when (intent) {
-            is LoginIntent.InitIntent -> TODO()
-            is LoginIntent.SelectCountryRegionIntent -> LoginAction.SelectCountryRegionAction(intent.countryRegionCode)
-            is LoginIntent.UpdateMobileIntent -> LoginAction.UpdateMobileAction(intent.mobile)
-            is LoginIntent.ClearMobileIntent -> LoginAction.ClearMobileAction
-            is LoginIntent.UpdateAgreeIntent -> TODO()
-            is LoginIntent.SendVerifyCodeIntent -> LoginAction.SendVerifyCodeAction(
-                intent.countryRegionCode,
-                viewStates.mobile
+            is LoginIntent.OnLaunched -> listOf(LoginAction.DisplayStep1)
+            is LoginIntent.SendVerifyCode -> listOf(
+                LoginAction.DisplayLoading,
+                LoginAction.SendVerifyCode(
+                    intent.countryRegionCode,
+                    intent.mobile
+                )
             )
-
-            is LoginIntent.UpdateVerifyCodeIntent -> LoginAction.UpdateVerifyCodeAction(intent.verifyCode)
-            is LoginIntent.ClearVerifyCodeIntent -> LoginAction.ClearVerifyCodeAction
-            is LoginIntent.VerifyCodeLoginIntent -> LoginAction.VerifyCodeLoginAction(
-                viewStates.countryRegionCode,
-                viewStates.mobile,
-                viewStates.verifyCode
+            is LoginIntent.VerifyCodeLogin -> listOf(
+                LoginAction.DisplayLoading,
+                LoginAction.VerifyCodeLogin(
+                    viewStates.countryRegionCode,
+                    viewStates.mobile,
+                    intent.verifyCode
+                )
             )
-
-
         }
     }
 
     override suspend fun reducer(result: LoginResult) {
         when (result) {
-            is LoginResult.InitResult -> TODO()
-            is LoginResult.SelectCountryRegionResult -> updateCountryRegion(result.countryRegionCode)
-            is LoginResult.UpdateMobileResult -> updateMobile(result.mobile)
-            is LoginResult.ClearMobileResult -> clearMobile()
-            is LoginResult.SendVerifyCodeResult.Success -> sendVerifyCodeSuccess(result.countryRegionCode, result.mobile)
-            is LoginResult.SendVerifyCodeResult.Failure -> sendVerifyCodeFailure(
-                result.error.message ?: ""
-            )
-
-            is LoginResult.UpdateVerifyCodeResult -> updateVerifyCode(result.verifyCode)
-            is LoginResult.ClearVerifyCodeResult -> clearVerifyCode()
-            is LoginResult.VerifyCodeLoginResult.Success -> verifyCodeLoginSuccess()
-            is LoginResult.VerifyCodeLoginResult.Failure -> verifyCodeLoginFailure(
-                result.error.message ?: ""
-            )
+            is LoginResult.DisplayStep1 -> displayStep1()
+            is LoginResult.SendVerifyCode.Success -> sendVerifyCodeSuccess(result.countryRegionCode, result.mobile)
+            is LoginResult.SendVerifyCode.Failure -> sendVerifyCodeFailure(result.error.message ?: "")
+            is LoginResult.VerifyCodeLogin.Success -> verifyCodeLoginSuccess()
+            is LoginResult.VerifyCodeLogin.Failure -> verifyCodeLoginFailure(result.error.message ?: "")
         }
     }
 
-    private fun updateCountryRegion(countryRegionCode: String) {
-        viewStates = viewStates.copy(countryRegionCode = countryRegionCode)
-    }
-
-    private fun updateMobile(mobile: String) {
-        viewStates = viewStates.copy(mobile = mobile)
-    }
-
-    private fun clearMobile() {
-        viewStates = viewStates.copy(mobile = "")
-    }
-
-    private fun updateAgree(isAgree: Boolean) {
-        viewStates = viewStates.copy(isAgree = isAgree)
+    private fun displayStep1() {
+        viewStates = viewStates.copy(result = LoginResult.DisplayStep1)
     }
 
     private fun sendVerifyCodeSuccess(countryRegionCode: String, mobile: String) {
         viewStates = viewStates.copy(
-            isSendVerifyCode = true,
+            result = LoginResult.SendVerifyCode,
             countryRegionCode = countryRegionCode,
             mobile = mobile
         )
@@ -103,16 +69,7 @@ class LoginViewModel @Inject constructor(
         _viewEvents.send(LoginViewEvent.ErrorMessage(error))
     }
 
-    private fun updateVerifyCode(verifyCode: String) {
-        viewStates = viewStates.copy(verifyCode = verifyCode)
-    }
-
-    private fun clearVerifyCode() {
-        viewStates = viewStates.copy(verifyCode = "")
-    }
-
     private suspend fun verifyCodeLoginSuccess() {
-        viewStates = viewStates.copy(isLogged = true)
         _viewEvents.send(LoginViewEvent.PopBack)
     }
 

@@ -33,6 +33,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.flow.collect
 import net.hwyz.iov.theme.AppTheme
+import net.hwyz.iov.ui.page.common.LoadingPage
+import net.hwyz.iov.ui.page.my.profile.ProfileResult
 import net.hwyz.iov.ui.widgets.LoginEditView
 import net.hwyz.iov.ui.widgets.bar.SNACK_ERROR
 import net.hwyz.iov.ui.widgets.bar.TopTitleBar
@@ -59,31 +61,44 @@ fun LoginPage(
                 popupSnackBar(coroutineState, scaffoldState, label = SNACK_ERROR, it.message)
             }
         }
+        viewModel.intent(LoginIntent.OnLaunched)
     }
 
-    LoginScreen(
-        navCtrl = navCtrl,
-        keyboardController = keyboardController,
-        viewStates = viewStates,
-        dispatch = {
-            viewModel.dispatch(it)
+    when(viewStates.result) {
+        LoginResult.DisplayStep1 -> {
+            Step1Screen(
+                navCtrl = navCtrl,
+                keyboardController = keyboardController,
+                intent = {
+                    viewModel.intent(it)
+                }
+            )
         }
-    )
-
+        LoginResult.DisplayLoading -> LoadingPage()
+        LoginResult.SendVerifyCode -> {
+            Step2Screen(
+                navCtrl = navCtrl,
+                keyboardController = keyboardController,
+                intent = {
+                    viewModel.intent(it)
+                }
+            )
+        }
+    }
 }
 
 @ExperimentalComposeUiApi
 @Composable
-fun LoginScreen(
+fun Step1Screen(
     navCtrl: NavHostController,
     keyboardController: SoftwareKeyboardController?,
-    viewStates: LoginState,
-    dispatch: (LoginIntent) -> Unit
+    intent: (LoginIntent) -> Unit
 ) {
     var expanded = remember { mutableStateOf(false) }
     var selectedIndex = remember { mutableStateOf(0) }
     val countryRegion = listOf("中国大陆", "中国香港", "中国澳门", "中国台湾")
     val countryRegionCode = listOf("+86", "+852", "+853", "+886")
+    val mobile = remember { mutableStateOf("") }
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -102,83 +117,111 @@ fun LoginScreen(
                 onBack = { navCtrl.back() }
             )
         }
-        if (!viewStates.isSendVerifyCode) {
-            item {
-                Text(
-                    text = "请输入手机号", fontSize = 25.sp,
-                    modifier = Modifier.padding(start = 20.dp, top = 30.dp, bottom = 40.dp)
-                )
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    TextButton(
-                        onClick = { expanded.value = true },
-                        colors = ButtonDefaults.buttonColors(
-                            contentColor = Color.Black,
-                            backgroundColor = Color.Transparent
-                        ),
-                        modifier = Modifier.padding(start = 12.dp)
-                    ) {
-                        Text(
-                            text = countryRegion[selectedIndex.value]
-                        )
-                    }
-                    DropdownMenu(
-                        expanded = expanded.value,
-                        onDismissRequest = { expanded.value = false }) {
-                        countryRegion.forEachIndexed { index, s ->
-                            DropdownMenuItem(onClick = {
-                                expanded.value = false
-                                selectedIndex.value = index
-                                dispatch(LoginIntent.SelectCountryRegionIntent(countryRegionCode[index]))
-                            }) {
-                                Text(text = s)
-                            }
-                        }
-                    }
-                    LoginEditView(
-                        text = viewStates.mobile,
-                        labelText = "",
-                        hintText = "请输入手机号",
-                        onValueChanged = {
-                            dispatch(LoginIntent.UpdateMobileIntent(it))
-                        },
-                        onDeleteClick = {
-                            dispatch(LoginIntent.ClearMobileIntent)
-                        }
+        item {
+            Text(
+                text = "请输入手机号", fontSize = 25.sp,
+                modifier = Modifier.padding(start = 20.dp, top = 30.dp, bottom = 40.dp)
+            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                TextButton(
+                    onClick = { expanded.value = true },
+                    colors = ButtonDefaults.buttonColors(
+                        contentColor = Color.Black,
+                        backgroundColor = Color.Transparent
+                    ),
+                    modifier = Modifier.padding(start = 12.dp)
+                ) {
+                    Text(
+                        text = countryRegion[selectedIndex.value]
                     )
                 }
-                Spacer(modifier = Modifier.padding(bottom = 10.dp))
-            }
-            item {
-                AppButton(
-                    text = "获取验证码",
-                    modifier = Modifier.padding(horizontal = 20.dp)
-                ) {
-                    keyboardController?.hide()
-                    dispatch(LoginIntent.SendVerifyCodeIntent(countryRegionCode[selectedIndex.value]))
+                DropdownMenu(
+                    expanded = expanded.value,
+                    onDismissRequest = { expanded.value = false }) {
+                    countryRegion.forEachIndexed { index, s ->
+                        DropdownMenuItem(onClick = {
+                            expanded.value = false
+                            selectedIndex.value = index
+                        }) {
+                            Text(text = s)
+                        }
+                    }
                 }
-            }
-        } else {
-            item {
                 LoginEditView(
-                    text = viewStates.verifyCode,
-                    labelText = "验证码",
-                    hintText = "请输入验证码",
+                    text = mobile.value,
+                    labelText = "",
+                    hintText = "请输入手机号",
                     onValueChanged = {
-                        dispatch(LoginIntent.UpdateVerifyCodeIntent(it))
+                        mobile.value = it
                     },
                     onDeleteClick = {
-                        dispatch(LoginIntent.ClearVerifyCodeIntent)
+                        mobile.value = ""
                     }
                 )
             }
-            item {
-                AppButton(
-                    text = "登录",
-                    modifier = Modifier.padding(horizontal = 20.dp)
-                ) {
-                    keyboardController?.hide()
-                    dispatch(LoginIntent.VerifyCodeLoginIntent)
+            Spacer(modifier = Modifier.padding(bottom = 10.dp))
+        }
+        item {
+            AppButton(
+                text = "获取验证码",
+                modifier = Modifier.padding(horizontal = 20.dp)
+            ) {
+                keyboardController?.hide()
+                intent(LoginIntent.SendVerifyCode(
+                    countryRegionCode = countryRegionCode[selectedIndex.value],
+                    mobile = mobile.value
+                ))
+            }
+        }
+    }
+}
+
+@ExperimentalComposeUiApi
+@Composable
+fun Step2Screen(
+    navCtrl: NavHostController,
+    keyboardController: SoftwareKeyboardController?,
+    intent: (LoginIntent) -> Unit
+) {
+    var verifyCode = remember { mutableStateOf("") }
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(AppTheme.colors.themeUi)
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onPress = {
+                        keyboardController?.hide()
+                    }
+                )
+            },
+    ) {
+        item {
+            TopTitleBar(
+                title = "登录 / 注册",
+                onBack = { navCtrl.back() }
+            )
+        }
+        item {
+            LoginEditView(
+                text = verifyCode.value,
+                labelText = "验证码",
+                hintText = "请输入验证码",
+                onValueChanged = {
+                    verifyCode.value = it
+                },
+                onDeleteClick = {
+                    verifyCode.value = ""
                 }
+            )
+        }
+        item {
+            AppButton(
+                text = "登录",
+                modifier = Modifier.padding(horizontal = 20.dp)
+            ) {
+                keyboardController?.hide()
+                intent(LoginIntent.VerifyCodeLogin(verifyCode = verifyCode.value))
             }
         }
     }
@@ -190,11 +233,9 @@ fun LoginScreen(
 fun LoginPagePreview() {
     val navCtrl = rememberNavController()
     val keyboardController = LocalSoftwareKeyboardController.current
-    val viewStates = LoginState()
-    LoginScreen(
+    Step1Screen(
         navCtrl = navCtrl,
         keyboardController = keyboardController,
-        viewStates = viewStates,
-        dispatch = {}
+        intent = {}
     )
 }

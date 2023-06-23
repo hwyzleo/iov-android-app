@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -30,7 +31,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import net.hwyz.iov.ui.page.common.RouteName
-import net.hwyz.iov.ui.widgets.list.ArrowRightListItem
+import net.hwyz.iov.ui.page.my.profile.ProfileIntent
+import net.hwyz.iov.ui.widgets.list.TitleList
 import net.hwyz.iov.utils.AppUserUtil
 import net.hwyz.iov.utils.RouteUtils
 
@@ -42,13 +44,20 @@ fun MyPage(
 ) {
     val viewStates = viewModel.viewStates
     viewStates.isLogged = AppUserUtil.isLogged
-    viewStates.userInfo = AppUserUtil.userInfo
-    MyScreen(navCtrl, viewStates)
+    LaunchedEffect(Unit) {
+        viewModel.intent(MyIntent.OnLaunched)
+    }
+    MyScreen(
+        navCtrl = navCtrl,
+        intent = { intent: MyIntent -> viewModel.intent(intent) },
+        viewState = viewStates
+    )
 }
 
 @Composable
 fun MyScreen(
     navCtrl: NavHostController,
+    intent: (MyIntent) -> Unit,
     viewState: MyState
 ) {
     var isLogin = remember { mutableStateOf(viewState.isLogged) }
@@ -64,17 +73,22 @@ fun MyScreen(
                 )
             }
         } else {
-            MyAvatar(nickname = AppUserUtil.userInfo?.nickname ?: "") {}
+            MyAvatar(nickname = AppUserUtil.nickname) {
+                RouteUtils.navTo(
+                    navCtrl = navCtrl,
+                    destinationName = RouteName.PROFILE
+                )
+            }
         }
         Column {
-            ArrowRightListItem(iconRes = Icons.Default.List, title = "我的积分") {}
-            ArrowRightListItem(iconRes = Icons.Default.ShoppingCart, title = "我的订单") {}
+            TitleList(iconRes = Icons.Default.List, title = "我的积分") {}
+            TitleList(iconRes = Icons.Default.ShoppingCart, title = "我的订单") {}
         }
         Spacer(modifier = Modifier.padding(bottom = 20.dp))
         Column {
-            ArrowRightListItem(iconRes = Icons.Default.Settings, title = "设置") {}
+            TitleList(iconRes = Icons.Default.Settings, title = "设置") {}
             if (isLogin.value) {
-                ArrowRightListItem(iconRes = Icons.Default.Settings, title = "退出") {
+                TitleList(iconRes = Icons.Default.Settings, title = "退出") {
                     AppUserUtil.onLogOut()
                     isLogin.value = false
                 }
@@ -114,6 +128,6 @@ fun MyAvatar(
 @Composable
 fun MyPagePreview() {
     val navCtrl = rememberNavController()
-    var viewState = MyState(userInfo = null)
-    MyScreen(navCtrl, viewState)
+    var viewState = MyState()
+    MyScreen(navCtrl, {}, viewState)
 }

@@ -1,6 +1,6 @@
 package net.hwyz.iov.utils
 
-import net.hwyz.iov.data.bean.UserInfo
+import net.hwyz.iov.data.bean.LoginResponse
 import net.hwyz.iov.data.store.DataStoreUtils
 
 /**
@@ -10,22 +10,35 @@ import net.hwyz.iov.data.store.DataStoreUtils
  */
 object AppUserUtil {
     private const val LOGGED_FLAG = "logged_flag"
-    private const val USER_INFO = "user_info"
+    private const val NICKNAME = "nickname"
+    private const val TOKEN = "token"
     var isLogged: Boolean
         get() = DataStoreUtils.readBooleanData(LOGGED_FLAG, false)
         set(value) = DataStoreUtils.saveSyncBooleanData(LOGGED_FLAG, value = value)
 
-    var userInfo: UserInfo?
-        get() = DataStoreUtils.readStringData(USER_INFO).fromJson()
-        set(value) = DataStoreUtils.saveSyncStringData(USER_INFO, value = value?.toJson() ?: "")
+    var nickname: String
+        get() = DataStoreUtils.readStringData(NICKNAME, "")
+        set(value) = DataStoreUtils.saveSyncStringData(NICKNAME, value = value)
 
-    fun onLogin(userInfo: UserInfo) {
+    var token: String
+        get() = DataStoreUtils.readStringData(TOKEN, "")
+        set(value) = DataStoreUtils.saveSyncStringData(TOKEN, value = value)
+
+    fun changeNickname(nickname: String) {
+        if (isLogged) {
+            this.nickname = nickname
+        }
+    }
+
+    fun onLogin(userInfo: LoginResponse) {
         isLogged = true
-        this.userInfo = userInfo
+        this.nickname = userInfo.nickname
+        this.token = userInfo.token
     }
 
     fun onLogOut() {
         isLogged = false
-        this.userInfo = null
+        this.nickname = ""
+        this.token = ""
     }
 }

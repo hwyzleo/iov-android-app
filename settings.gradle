@@ -1,2 +1,2 @@
 include ':app'
-rootProject.name = "IoV APP"
+rootProject.name = "iov-android-app"

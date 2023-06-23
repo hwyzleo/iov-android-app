@@ -6,5 +6,6 @@ object RouteName {
     const val VEHICLE = "vehicle"
     const val MALL = "mall"
     const val MY = "my"
+    const val PROFILE = "profile"
     const val LOGIN = "login"
 }

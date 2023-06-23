@@ -12,24 +12,21 @@ open class LoginProcessor @Inject constructor(
 
     override suspend fun executeAction(action: LoginAction): LoginResult {
         return when (action) {
-            is LoginAction.InitAction -> TODO()
-            is LoginAction.SelectCountryRegionAction -> LoginResult.SelectCountryRegionResult(action.countryRegionCode)
-            is LoginAction.UpdateMobileAction -> LoginResult.UpdateMobileResult(action.mobile)
-            is LoginAction.ClearMobileAction -> LoginResult.ClearMobileResult
-            is LoginAction.SendVerifyCodeAction -> sendVerifyCode(
-                action.countryRegionCode,
-                action.mobile
-            )
-
-            is LoginAction.UpdateVerifyCodeAction -> LoginResult.UpdateVerifyCodeResult(action.verifyCode)
-            is LoginAction.ClearVerifyCodeAction -> LoginResult.ClearVerifyCodeResult
-            is LoginAction.VerifyCodeLoginAction -> verifyCodeLogin(
-                action.countryRegionCode,
-                action.mobile,
-                action.verifyCode
-            )
-
-
+            is LoginAction.DisplayStep1 -> LoginResult.DisplayStep1
+            is LoginAction.DisplayLoading -> LoginResult.DisplayLoading
+            is LoginAction.SendVerifyCode -> {
+                sendVerifyCode(
+                    action.countryRegionCode,
+                    action.mobile
+                )
+            }
+            is LoginAction.VerifyCodeLogin -> {
+                verifyCodeLogin(
+                    action.countryRegionCode,
+                    action.mobile,
+                    action.verifyCode
+                )
+            }
         }
     }
 
@@ -37,12 +34,12 @@ open class LoginProcessor @Inject constructor(
         return try {
             val response = service.sendLoginVerifyCode(countryRegionCode.trim(), mobile.trim())
             if (response.code == 0) {
-                LoginResult.SendVerifyCodeResult.Success(countryRegionCode, mobile)
+                LoginResult.SendVerifyCode.Success(countryRegionCode, mobile)
             } else {
                 throw Exception(response.message)
             }
         } catch (e: Exception) {
-            LoginResult.SendVerifyCodeResult.Failure(e)
+            LoginResult.SendVerifyCode.Failure(e)
         }
     }
 
@@ -56,12 +53,12 @@ open class LoginProcessor @Inject constructor(
                 service.verifyCodeLogin(countryRegionCode.trim(), mobile.trim(), verifyCode.trim())
             if (response.code == 0) {
                 AppUserUtil.onLogin(response.data!!)
-                LoginResult.VerifyCodeLoginResult.Success
+                LoginResult.VerifyCodeLogin.Success
             } else {
                 throw Exception(response.message)
             }
         } catch (e: Exception) {
-            LoginResult.VerifyCodeLoginResult.Failure(e)
+            LoginResult.VerifyCodeLogin.Failure(e)
         }
     }
 }
