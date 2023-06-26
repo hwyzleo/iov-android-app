@@ -2,11 +2,10 @@
 buildscript {
     ext {
         accompanistVersion = "0.18.0"
-        compose_version = "1.1.1"
-        dagger_hilt_version = "2.38.1"
-        dagger_hilt_androidx_version = "1.0.0-alpha03"
+        compose_compiler_version = "1.4.3"
+        dagger_hilt_version = "2.46.1"
         datastoreVersion = "1.0.0-rc02"
-        kotlin_version = "1.6.10"
+        kotlin_version = "1.8.10"
         pagingVersion = "3.1.0-rc01"
         pagingComposeVersion = "1.0.0-alpha14"
         retrofitVersion = "2.9.0"
@@ -16,7 +15,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.1.2'
+        classpath 'com.android.tools.build:gradle:8.0.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "de.mannodermaus.gradle.plugins:android-junit5:$android_junit5_version"
         classpath "org.jacoco:org.jacoco.core:$jacoco_version"

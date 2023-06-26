@@ -84,6 +84,7 @@ fun LoginPage(
                 }
             )
         }
+        else -> {}
     }
 }
 

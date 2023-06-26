@@ -3,10 +3,7 @@ package net.hwyz.iov.ui.page.my.profile
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import net.hwyz.iov.base.presentation.BaseViewModel
@@ -67,6 +64,7 @@ class ProfileViewModel @Inject constructor(
                 updateGender(gender = result.gender)
                 displayProfile()
             }
+            else -> {}
         }
     }
 
@@ -77,7 +75,8 @@ class ProfileViewModel @Inject constructor(
     private fun loadProfile(accountInfo: AccountInfo) {
         viewStates = viewStates.copy(
             nickname = accountInfo.nickname,
-            gender = accountInfo.gender
+            gender = accountInfo.gender,
+            avatar = accountInfo.avatar
         )
     }
 

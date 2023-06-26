@@ -1,6 +1,7 @@
 package net.hwyz.iov.ui.page.common
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarHost
@@ -48,12 +49,14 @@ fun AppScaffold() {
                 RouteName.MY -> BottomNavBar(navCtrl = navCtrl)
             }
         },
-        content = {
+        content = { padding ->
             var homeIndex = remember { 0 }
             var categoryIndex = remember { 0 }
 
             NavHost(
-                modifier = Modifier.background(MaterialTheme.colors.background),
+                modifier = Modifier
+                    .background(MaterialTheme.colors.background)
+                    .padding(padding),
                 navController = navCtrl,
                 startDestination = RouteName.MY
             ) {

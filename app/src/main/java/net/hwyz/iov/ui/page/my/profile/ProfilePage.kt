@@ -32,9 +32,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import net.hwyz.iov.theme.AppTheme
 import net.hwyz.iov.ui.page.common.LoadingPage
 import net.hwyz.iov.ui.page.login.LoginIntent
+import net.hwyz.iov.ui.widgets.OnlineImage
 import net.hwyz.iov.ui.widgets.bar.TopTitleBar
 import net.hwyz.iov.ui.widgets.item.TextFieldItem
 import net.hwyz.iov.ui.widgets.list.ContentList
@@ -66,6 +68,7 @@ fun ProfilePage(
             ProfileScreen(
                 navCtrl,
                 { intent: ProfileIntent -> viewModel.intent(intent) },
+                viewStates.avatar,
                 viewStates.nickname,
                 viewStates.gender
             )
@@ -82,6 +85,7 @@ fun ProfilePage(
                 gender = viewStates.gender
             )
         }
+        else -> {}
     }
 
 }
@@ -90,6 +94,7 @@ fun ProfilePage(
 fun ProfileScreen(
     navCtrl: NavHostController,
     intent: (ProfileIntent) -> Unit,
+    avatar: String?,
     nickname: String,
     gender: String
 ) {
@@ -103,13 +108,23 @@ fun ProfileScreen(
             onBack = { navCtrl.back() }
         )
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(
-                imageVector = Icons.Default.AccountCircle,
-                contentDescription = "",
-                modifier = Modifier
-                    .padding(top = 80.dp)
-                    .size(100.dp)
-            )
+            if (!avatar.isNullOrEmpty()) {
+                AsyncImage(
+                    model = avatar,
+                    contentDescription = "",
+                    modifier = Modifier
+                        .padding(top = 80.dp)
+                        .size(100.dp)
+                )
+            } else {
+                Icon(
+                    imageVector = Icons.Default.AccountCircle,
+                    contentDescription = "",
+                    modifier = Modifier
+                        .padding(top = 80.dp)
+                        .size(100.dp)
+                )
+            }
             Spacer(modifier = Modifier.padding(bottom = 10.dp))
         }
         Column {
@@ -242,7 +257,7 @@ fun GenderScreen(
 @Composable
 fun ProfilePagePreview() {
     val navCtrl = rememberNavController()
-    ProfileScreen(navCtrl, {}, "hwyz_leo", "MALE")
+    ProfileScreen(navCtrl, {}, "", "hwyz_leo", "MALE")
 //    NicknameScreen({}, "hwyz_leo")
 //    GenderScreen(intent = {}, gender = "UNKNOWN")
 }

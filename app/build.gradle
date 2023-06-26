@@ -3,7 +3,7 @@ plugins {
     id "kotlin-android"
     id "kotlin-kapt"
     id "kotlin-parcelize"
-    id "dagger.hilt.android.plugin"
+    id "com.google.dagger.hilt.android"
 
     id "jacoco"
     // junit5 doesn't support android projects out of the box
@@ -11,13 +11,13 @@ plugins {
 }
 
 android {
-    compileSdkVersion 32
+    compileSdkVersion 33
 
     defaultConfig {
         testInstrumentationRunnerArguments runnerBuilder: 'de.mannodermaus.junit5.AndroidJUnit5Builder'
         applicationId "net.hwyz.iov"
         minSdkVersion 24
-        targetSdkVersion 32
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
 
@@ -36,6 +36,7 @@ android {
 
     buildFeatures {
         compose true
+        buildConfig = true
     }
 
     compileOptions {
@@ -72,7 +73,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "$compose_version"
+        kotlinCompilerExtensionVersion = "$compose_compiler_version"
     }
 
     namespace 'net.hwyz.iov'
@@ -90,17 +91,19 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'androidx.lifecycle:lifecycle-reactivestreams-ktx:2.4.1'
+    implementation "androidx.navigation:navigation-compose:2.5.3"
 
-    implementation "androidx.compose.runtime:runtime:$compose_version"
-    implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
-    implementation "androidx.compose.runtime:runtime-rxjava3:$compose_version"
-    implementation "androidx.compose.compiler:compiler:$compose_version"
-    implementation "androidx.compose.foundation:foundation:$compose_version"
-    implementation "androidx.compose.ui:ui:$compose_version"
-    implementation "androidx.compose.ui:ui-tooling:$compose_version"
-    implementation "androidx.compose.material:material:$compose_version"
+    implementation "androidx.compose.runtime:runtime:$compose_compiler_version"
+    implementation "androidx.compose.runtime:runtime-livedata:$compose_compiler_version"
+    implementation "androidx.compose.runtime:runtime-rxjava3:$compose_compiler_version"
+    implementation "androidx.compose.compiler:compiler:$compose_compiler_version"
+    implementation "androidx.compose.foundation:foundation:$compose_compiler_version"
+    implementation "androidx.compose.ui:ui:$compose_compiler_version"
+    implementation "androidx.compose.ui:ui-tooling:$compose_compiler_version"
+    implementation "androidx.compose.material:material:$compose_compiler_version"
+    implementation "io.coil-kt:coil-compose:2.4.0"
 
-    implementation "androidx.compose.foundation:foundation-layout:$compose_version"
+    implementation "androidx.compose.foundation:foundation-layout:$compose_compiler_version"
 
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.0"
 
@@ -122,9 +125,8 @@ dependencies {
     //Dagger Hilt
     implementation "com.google.dagger:hilt-android:$dagger_hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$dagger_hilt_version"
-    implementation "androidx.hilt:hilt-navigation-compose:$dagger_hilt_androidx_version"
-    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$dagger_hilt_androidx_version"
-    kapt "androidx.hilt:hilt-compiler:$dagger_hilt_androidx_version"
+    implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
+    kapt "androidx.hilt:hilt-compiler:1.0.0"
     implementation "androidx.activity:activity-ktx:1.4.0"
 
     //RxJava
@@ -175,8 +177,8 @@ dependencies {
     testImplementation("junit:junit:4.13.1")
     androidTestImplementation("androidx.test:rules:1.4.0")
     androidTestRuntimeOnly("androidx.test:runner:1.4.0")
-    androidTestImplementation("androidx.compose.ui:ui-test:$compose_version")
-    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
+    androidTestImplementation("androidx.compose.ui:ui-test:$compose_compiler_version")
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_compiler_version"
 
     implementation "androidx.activity:activity-compose:1.4.0"
 

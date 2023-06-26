@@ -50,6 +50,7 @@ class LoginViewModel @Inject constructor(
             is LoginResult.SendVerifyCode.Failure -> sendVerifyCodeFailure(result.error.message ?: "")
             is LoginResult.VerifyCodeLogin.Success -> verifyCodeLoginSuccess()
             is LoginResult.VerifyCodeLogin.Failure -> verifyCodeLoginFailure(result.error.message ?: "")
+            else -> {}
         }
     }
 
