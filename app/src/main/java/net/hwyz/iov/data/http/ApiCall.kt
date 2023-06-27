@@ -3,6 +3,7 @@ package net.hwyz.iov.data.http
 import android.annotation.SuppressLint
 import net.hwyz.iov.data.http.interceptor.CacheCookieInterceptor
 import net.hwyz.iov.data.http.interceptor.LogInterceptor
+import net.hwyz.iov.data.http.interceptor.MockInterceptor
 import net.hwyz.iov.data.http.interceptor.SetCookieInterceptor
 import net.hwyz.iov.data.http.interceptor.SetHeaderInterceptor
 import okhttp3.OkHttpClient
@@ -42,6 +43,7 @@ object ApiCall {
                 connectTimeout(DEFAULT_TIMEOUT.toLong(), TimeUnit.MILLISECONDS)
                 readTimeout(DEFAULT_TIMEOUT.toLong(), TimeUnit.MILLISECONDS)
                 writeTimeout(DEFAULT_TIMEOUT.toLong(), TimeUnit.MILLISECONDS)
+                addInterceptor(MockInterceptor())
                 addInterceptor(SetCookieInterceptor())
                 addInterceptor(SetHeaderInterceptor())
                 addInterceptor(CacheCookieInterceptor())

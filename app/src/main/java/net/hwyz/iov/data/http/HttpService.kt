@@ -13,7 +13,8 @@ import retrofit2.http.*
 interface HttpService {
 
     companion object {
-        const val url = "http://192.168.2.223:8081"
+//        const val url = "http://192.168.2.223:8081"
+        const val url = "http://mock"
     }
 
     // 发送登录验证码
