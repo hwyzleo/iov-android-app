@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
@@ -22,7 +23,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -30,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import net.hwyz.iov.ui.page.common.RouteName
 import net.hwyz.iov.ui.page.my.profile.ProfileIntent
 import net.hwyz.iov.ui.widgets.list.TitleList
@@ -66,14 +71,20 @@ fun MyScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         if (!isLogin.value) {
-            MyAvatar(nickname = "注册 / 登录") {
+            MyAvatar(
+                nickname = "注册 / 登录",
+                avatar = null
+            ) {
                 RouteUtils.navTo(
                     navCtrl = navCtrl,
                     destinationName = RouteName.LOGIN
                 )
             }
         } else {
-            MyAvatar(nickname = AppUserUtil.nickname) {
+            MyAvatar(
+                nickname = AppUserUtil.nickname,
+                avatar = AppUserUtil.avatar
+            ) {
                 RouteUtils.navTo(
                     navCtrl = navCtrl,
                     destinationName = RouteName.PROFILE
@@ -100,6 +111,7 @@ fun MyScreen(
 @Composable
 fun MyAvatar(
     nickname: String,
+    avatar: String?,
     onClick: PressGestureScope.(Offset) -> Unit
 ) {
     Box(
@@ -111,13 +123,31 @@ fun MyAvatar(
             }
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(
-                imageVector = Icons.Default.AccountCircle,
-                contentDescription = "",
-                modifier = Modifier
-                    .padding(top = 80.dp)
-                    .size(100.dp)
-            )
+            if(avatar == null) {
+                Icon(
+                    imageVector = Icons.Default.AccountCircle,
+                    contentDescription = "",
+                    modifier = Modifier
+                        .padding(top = 80.dp)
+                        .size(100.dp)
+                )
+            } else {
+                AsyncImage(
+                    model = avatar,
+                    contentDescription = "",
+                    modifier = Modifier
+                        .padding(top = 80.dp)
+                        .size(100.dp)
+                        .clip(CircleShape)
+                        .drawBehind {
+                            drawCircle(
+                                color = Color.Gray,
+                                center = center,
+                                radius = size.minDimension / 2
+                            )
+                        }
+                )
+            }
             Text(text = nickname, fontSize = 18.sp, modifier = Modifier.padding(5.dp))
             Spacer(modifier = Modifier.padding(bottom = 10.dp))
         }

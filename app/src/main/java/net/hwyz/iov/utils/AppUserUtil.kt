@@ -11,6 +11,7 @@ import net.hwyz.iov.data.store.DataStoreUtils
 object AppUserUtil {
     private const val LOGGED_FLAG = "logged_flag"
     private const val NICKNAME = "nickname"
+    private const val AVATAR = "avatar"
     private const val TOKEN = "token"
     var isLogged: Boolean
         get() = DataStoreUtils.readBooleanData(LOGGED_FLAG, false)
@@ -19,6 +20,10 @@ object AppUserUtil {
     var nickname: String
         get() = DataStoreUtils.readStringData(NICKNAME, "")
         set(value) = DataStoreUtils.saveSyncStringData(NICKNAME, value = value)
+
+    var avatar: String?
+        get() = DataStoreUtils.readStringData(AVATAR, "")
+        set(value) = value?.let { DataStoreUtils.saveSyncStringData(AVATAR, value = it) }!!
 
     var token: String
         get() = DataStoreUtils.readStringData(TOKEN, "")
@@ -33,6 +38,7 @@ object AppUserUtil {
     fun onLogin(userInfo: LoginResponse) {
         isLogged = true
         this.nickname = userInfo.nickname
+        this.avatar = userInfo.avatar
         this.token = userInfo.token
     }
 

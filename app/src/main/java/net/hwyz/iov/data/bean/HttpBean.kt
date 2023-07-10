@@ -20,6 +20,7 @@ data class TspResponse<T>(
 data class LoginResponse(
     var mobile: String,
     var nickname: String,
+    var avatar: String?,
     var token: String,
     var tokenExpires: Long,
     var refreshToken: String,

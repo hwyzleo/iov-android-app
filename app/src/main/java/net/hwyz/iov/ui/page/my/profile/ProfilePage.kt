@@ -1,6 +1,9 @@
 package net.hwyz.iov.ui.page.my.profile
 
+import android.graphics.Bitmap
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -9,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
@@ -26,7 +31,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -35,8 +44,6 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import net.hwyz.iov.theme.AppTheme
 import net.hwyz.iov.ui.page.common.LoadingPage
-import net.hwyz.iov.ui.page.login.LoginIntent
-import net.hwyz.iov.ui.widgets.OnlineImage
 import net.hwyz.iov.ui.widgets.bar.TopTitleBar
 import net.hwyz.iov.ui.widgets.item.TextFieldItem
 import net.hwyz.iov.ui.widgets.list.ContentList
@@ -73,21 +80,47 @@ fun ProfilePage(
                 viewStates.gender
             )
         }
+
         ProfileResult.DisplayNickname -> {
             NicknameScreen(
                 intent = { intent: ProfileIntent -> viewModel.intent(intent) },
                 nickname = viewStates.nickname
             )
         }
+
         ProfileResult.DisplayGender -> {
             GenderScreen(
                 intent = { intent: ProfileIntent -> viewModel.intent(intent) },
                 gender = viewStates.gender
             )
         }
+
         else -> {}
     }
 
+}
+
+@Composable
+fun SelectedImage(image: Bitmap?, onRemove: () -> Unit) {
+    Column {
+        if (image != null) {
+            Image(
+                bitmap = image.asImageBitmap(),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(200.dp)
+                    .padding(8.dp)
+                    .clickable(onClick = onRemove)
+            )
+            Button(onClick = onRemove) {
+                Text(text = "Remove")
+            }
+        } else {
+            Button(onClick = onRemove) {
+                Text(text = "Select an Image")
+            }
+        }
+    }
 }
 
 @Composable
@@ -115,6 +148,14 @@ fun ProfileScreen(
                     modifier = Modifier
                         .padding(top = 80.dp)
                         .size(100.dp)
+                        .clip(CircleShape)
+                        .drawBehind {
+                            drawCircle(
+                                color = Color.Gray,
+                                center = center,
+                                radius = size.minDimension / 2
+                            )
+                        }
                 )
             } else {
                 Icon(

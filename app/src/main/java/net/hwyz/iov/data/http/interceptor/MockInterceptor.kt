@@ -1,6 +1,7 @@
 package net.hwyz.iov.data.http.interceptor
 
 import com.google.gson.Gson
+import net.hwyz.iov.data.bean.AccountInfo
 import net.hwyz.iov.data.bean.LoginResponse
 import net.hwyz.iov.data.bean.TspResponse
 import okhttp3.Interceptor
@@ -28,6 +29,9 @@ class MockInterceptor : Interceptor {
             }
             if (url.endsWith("/account/mp/login/verifyCodeLogin")) {
                 responseBody = mockVerifyCodeLogin()
+            }
+            if (url.endsWith("/account/mp/account/info")) {
+                responseBody = mockAccountInfo()
             }
             return Response.Builder()
                 .request(request)
@@ -63,10 +67,28 @@ class MockInterceptor : Interceptor {
                 data = LoginResponse(
                     mobile = "13917288107",
                     nickname = "hwyz_leo",
+                    avatar = "https://iov-public-1253442587.cos.ap-shanghai.myqcloud.com/account-service/avatar-EqeOCSvUejtJlIiNcNGmo.jpeg",
                     token = "token",
                     tokenExpires = System.currentTimeMillis() + 1000000000,
                     refreshToken = "refreshToken",
                     refreshTokenExpires = System.currentTimeMillis() + 1000000000
+                )
+            )
+        ).toResponseBody("application/json".toMediaTypeOrNull())
+    }
+
+    private fun mockAccountInfo(): ResponseBody {
+        val gson = Gson()
+        return gson.toJson(
+            TspResponse(
+                code = 0,
+                message = "",
+                ts = System.currentTimeMillis(),
+                data = AccountInfo(
+                    mobile = "13917288107",
+                    nickname = "hwyz_leo",
+                    avatar = "https://iov-public-1253442587.cos.ap-shanghai.myqcloud.com/account-service/avatar-EqeOCSvUejtJlIiNcNGmo.jpeg",
+                    gender = "MALE"
                 )
             )
         ).toResponseBody("application/json".toMediaTypeOrNull())
